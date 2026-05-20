@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jaipuria MBA Payback Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <img
+            class="hero-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/8/81/Jaipuria_Institute_of_management_logo.png"
+            alt="Jaipuria Institute of Management logo"
+          />
+          <p class="eyebrow">Jaipuria PGDM 2026-28</p>
+          <h1>MBA payback and IRR calculator</h1>
+          <p class="lede">
+            See whether investing in yourself through an MBA can pay better than putting the same effort and money into other investments. Compare fees, salary foregone, and the career upside across Lucknow, Noida, Jaipur, and Indore.
+          </p>
+        </div>
+        <div class="hero-metric">
+          <span>Current IRR</span>
+          <strong id="heroIrr">--</strong>
+          <small id="heroMetricNote">30-year career return projection</small>
+        </div>
+      </section>
+
+      <section class="calculator-grid" aria-label="MBA payback calculator">
+        <form class="panel inputs" id="assumptionForm">
+          <div class="section-heading">
+            <span>Inputs</span>
+            <p>All salary figures are annual CTC in lakhs.</p>
+          </div>
+
+          <label class="field">
+            <span>Campus</span>
+            <select id="campus"></select>
+          </label>
+
+          <label class="field">
+            <span>Salary without MBA</span>
+            <select id="preMbaSalary"></select>
+          </label>
+
+          <label class="field">
+            <span>Salary growth without MBA</span>
+            <select id="preMbaGrowth"></select>
+          </label>
+
+          <fieldset class="choice-block">
+            <legend>Expected post-MBA placement level <sup>*</sup></legend>
+            <div class="segmented" id="placementLevel"></div>
+            <p class="field-note">
+              * Salary numbers use the actual salaries of the 2026 batch, adjusted for two years of inflation from 2026 to 2028.
+            </p>
+          </fieldset>
+
+          <fieldset class="choice-block">
+            <legend>Post-MBA salary growth <sup>*</sup></legend>
+            <div class="segmented" id="postMbaGrowth"></div>
+            <p class="field-note">
+              * As per Jaipuria's Alumni Tracer study, average salary growth is 15% CAGR over a 10-year period.
+            </p>
+          </fieldset>
+
+          <div class="fixed-horizon">
+            <span>Projection horizon</span>
+            <strong>30 years after MBA</strong>
+          </div>
+        </form>
+
+        <section class="panel results" aria-live="polite">
+          <div class="section-heading">
+            <span>Result</span>
+            <p>IRR uses annual cash flows from start of programme.</p>
+          </div>
+          <div class="result-grid">
+            <article>
+              <span>IRR</span>
+              <strong id="irrValue">--</strong>
+            </article>
+            <article>
+              <span>Fee + foregone salary</span>
+              <strong id="investmentValue">--</strong>
+            </article>
+            <article>
+              <span>Net gain</span>
+              <strong id="netGainValue">--</strong>
+            </article>
+          </div>
+
+          <div class="benchmark-card">
+            <div class="cashflow-topline">
+              <h2>IRR versus common return benchmarks</h2>
+              <span>30-year annualized return</span>
+            </div>
+            <div class="benchmark-bars" id="benchmarkBars"></div>
+            <p class="benchmark-note" id="benchmarkNote"></p>
+          </div>
+
+          <div class="cashflow-card">
+            <div class="cashflow-topline">
+              <h2>Cash-flow timeline</h2>
+              <span id="scenarioLabel"></span>
+            </div>
+            <div class="cashflow-legend" aria-label="Cash-flow legend">
+              <span><i class="legend-fee"></i>Fee</span>
+              <span><i class="legend-lost"></i>Foregone salary</span>
+              <span><i class="legend-gain"></i>Incremental salary</span>
+            </div>
+            <div class="investment-split" id="investmentSplit"></div>
+            <div class="bars" id="cashflowBars"></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="data-section">
+        <div class="section-heading wide">
+          <span>Published 2026-28 programme fee</span>
+          <p>Programme fee only. Security deposit, hostel, mess, financing cost, taxes, scholarships, and personal expenses are not included.</p>
+        </div>
+        <div class="fee-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Campus</th>
+                <th>Year 1</th>
+                <th>Year 2</th>
+                <th>Total fee</th>
+              </tr>
+            </thead>
+            <tbody id="feeTable"></tbody>
+          </table>
+        </div>
+        <p class="source-note">
+          Source: Jaipuria Institute of Management published MBA/PGDM fees page and admission brochure for Batch 2026-28. Nifty benchmark uses 12.74% annualised total return including dividends as of February 27, 2026. Logo source: Wikimedia Commons, CC BY-SA 4.0. Gold and FD benchmarks are comparison assumptions, not financial advice.
+        </p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
