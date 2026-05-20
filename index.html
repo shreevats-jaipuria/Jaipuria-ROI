@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=2" />
   </head>
   <body>
     <main class="app-shell">
@@ -115,7 +115,21 @@
               <span><i class="legend-gain"></i>Incremental salary</span>
             </div>
             <div class="investment-split" id="investmentSplit"></div>
-            <div class="bars" id="cashflowBars"></div>
+            <div class="cashflow-table-wrap">
+              <table class="cashflow-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Fee</th>
+                    <th>Foregone salary</th>
+                    <th>Post-MBA salary</th>
+                    <th>Incremental salary</th>
+                    <th>Net cash flow</th>
+                  </tr>
+                </thead>
+                <tbody id="cashflowRows"></tbody>
+              </table>
+            </div>
           </div>
         </section>
       </section>
@@ -144,6 +158,6 @@
       </section>
     </main>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
   </body>
 </html>

@@ -60,6 +60,10 @@ function formatPercent(value, digits = 1) {
   return `${value.toFixed(digits)}%`;
 }
 
+function academicYearLabel(startYear) {
+  return `${startYear}-${String(startYear + 1).slice(-2)}`;
+}
+
 function populateSelects() {
   const campusSelect = document.querySelector("#campus");
   campusSelect.innerHTML = Object.keys(campuses)
@@ -186,7 +190,8 @@ function buildCashFlowRows({ fee, preSalary, preGrowth, postSalary, postGrowth, 
   const year1LostSalary = preSalary * (1 + preGrowth);
 
   rows.push({
-    label: "Study Y1",
+    label: academicYearLabel(2026),
+    scaleGroup: "study",
     total: -(fee.year1 + year0LostSalary),
     parts: [
       { label: "Fee", value: fee.year1, type: "fee" },
@@ -195,7 +200,8 @@ function buildCashFlowRows({ fee, preSalary, preGrowth, postSalary, postGrowth, 
   });
 
   rows.push({
-    label: "Study Y2",
+    label: academicYearLabel(2027),
+    scaleGroup: "study",
     total: -(fee.year2 + year1LostSalary),
     parts: [
       { label: "Fee", value: fee.year2, type: "fee" },
@@ -207,8 +213,11 @@ function buildCashFlowRows({ fee, preSalary, preGrowth, postSalary, postGrowth, 
     const noMbaSalary = preSalary * (1 + preGrowth) ** (year + 2);
     const mbaSalary = postSalary * (1 + postGrowth) ** year;
     rows.push({
-      label: `Work Y${year + 1}`,
+      label: academicYearLabel(2028 + year),
+      scaleGroup: "work",
       total: mbaSalary - noMbaSalary,
+      foregoneSalary: noMbaSalary,
+      postMbaSalary: mbaSalary,
       parts: [{ label: "Incremental salary", value: mbaSalary - noMbaSalary, type: "positive" }],
     });
   }
@@ -271,43 +280,59 @@ function renderBenchmarks(irr) {
   document.querySelector("#benchmarkNote").textContent = note;
 }
 
-function renderBars(rows) {
-  const maxAbs = Math.max(...rows.map((row) => Math.abs(row.total)));
-  document.querySelector("#cashflowBars").innerHTML = rows
-    .map((row) => {
-      const width = Math.max((Math.abs(row.total) / maxAbs) * 100, 4);
-      const totalClass = row.total < 0 ? "negative" : "positive";
-      const partTotal = row.parts.reduce((sum, part) => sum + Math.abs(part.value), 0);
-      const barHtml =
-        row.parts.length > 1
-          ? `
-            <div class="bar-segments ${totalClass}" style="width: ${width}%">
-              ${row.parts
-                .map((part) => {
-                  const segmentWidth = (Math.abs(part.value) / partTotal) * 100;
-                  return `<div class="bar segment ${part.type}" style="width: ${segmentWidth}%"></div>`;
-                })
-                .join("")}
-            </div>
-          `
-          : `<div class="bar ${totalClass}" style="width: ${width}%"></div>`;
+function partValue(row, type) {
+  return row.parts.find((part) => part.type === type)?.value || 0;
+}
 
-      const detailHtml =
-        row.parts.length > 1
-          ? row.parts.map((part) => `${part.label}: ${formatLakhs(part.value)}`).join(" | ")
-          : row.parts[0].label;
+function renderCashflowTable(rows) {
+  const tableRows = rows
+    .map((row) => {
+      const fee = partValue(row, "fee");
+      const lostSalary = partValue(row, "lost") || row.foregoneSalary || 0;
+      const postMbaSalary = row.postMbaSalary || 0;
+      const incrementalSalary = partValue(row, "positive");
+      const netClass = row.total < 0 ? "negative-cell" : "positive-cell";
+      const formatCell = (value, className = "") =>
+        value ? `<td class="${className}">${formatLakhs(value)}</td>` : `<td class="empty-cell">--</td>`;
 
       return `
-        <div class="bar-row">
-          <span>${row.label}</span>
-          <div class="bar-track">
-            ${barHtml}
-          </div>
-          <span class="cashflow-value">${formatLakhs(row.total)}<small>${detailHtml}</small></span>
-        </div>
+        <tr>
+          <td>${row.label}</td>
+          ${formatCell(fee, "negative-cell")}
+          ${formatCell(lostSalary, "negative-cell")}
+          ${formatCell(postMbaSalary)}
+          ${formatCell(incrementalSalary, "positive-cell")}
+          <td class="total-cell ${netClass}">${formatLakhs(row.total)}</td>
+        </tr>
       `;
     })
     .join("");
+
+  const totals = rows.reduce(
+    (sum, row) => {
+      sum.fee += partValue(row, "fee");
+      sum.lostSalary += partValue(row, "lost") || row.foregoneSalary || 0;
+      sum.postMbaSalary += row.postMbaSalary || 0;
+      sum.incrementalSalary += partValue(row, "positive");
+      sum.net += row.total;
+      return sum;
+    },
+    { fee: 0, lostSalary: 0, postMbaSalary: 0, incrementalSalary: 0, net: 0 },
+  );
+
+  const totalNetClass = totals.net < 0 ? "negative-cell" : "positive-cell";
+  const totalRow = `
+    <tr class="cashflow-total-row">
+      <td>Total</td>
+      <td class="negative-cell">${formatLakhs(totals.fee)}</td>
+      <td class="negative-cell">${formatLakhs(totals.lostSalary)}</td>
+      <td>${formatLakhs(totals.postMbaSalary)}</td>
+      <td class="positive-cell">${formatLakhs(totals.incrementalSalary)}</td>
+      <td class="total-cell ${totalNetClass}">${formatLakhs(totals.net)}</td>
+    </tr>
+  `;
+
+  document.querySelector("#cashflowRows").innerHTML = tableRows + totalRow;
 }
 
 function updateCalculator() {
@@ -341,7 +366,7 @@ function updateCalculator() {
 
   renderBenchmarks(irr);
   renderInvestmentSplit({ fee, preSalary, preGrowth });
-  renderBars(rows);
+  renderCashflowTable(rows);
 }
 
 function bindInputs() {

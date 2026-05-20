@@ -496,84 +496,50 @@ output {
   font-size: 1.05rem;
 }
 
-.bars {
-  display: grid;
-  gap: 12px;
+.cashflow-table-wrap {
   margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  max-height: 520px;
+  overflow: auto;
 }
 
-.bar-row {
-  display: grid;
-  grid-template-columns: 78px minmax(0, 1fr) 220px;
-  gap: 10px;
-  align-items: center;
-  font-size: 0.86rem;
-  font-weight: 700;
+.cashflow-table {
+  min-width: 900px;
 }
 
-.bar-track {
-  height: 16px;
-  border-radius: 999px;
-  background: #e9eef8;
-  overflow: hidden;
-  position: relative;
+.cashflow-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
-.bar {
-  height: 100%;
-  border-radius: 999px;
-  min-width: 4px;
+.cashflow-table td {
+  font-size: 0.88rem;
 }
 
-.bar-segments {
-  display: flex;
-  height: 100%;
+.cashflow-table .negative-cell {
+  color: var(--brand-red);
 }
 
-.bar-segments.negative {
-  justify-content: flex-end;
+.cashflow-table .positive-cell {
+  color: var(--green);
 }
 
-.bar.segment {
-  min-width: 0;
-  border-radius: 0;
+.cashflow-table .empty-cell {
+  color: #9aa5b7;
 }
 
-.bar.segment:first-child {
-  border-radius: 999px 0 0 999px;
+.cashflow-table .total-cell {
+  font-weight: 800;
 }
 
-.bar.segment:last-child {
-  border-radius: 0 999px 999px 0;
-}
-
-.bar.negative {
-  margin-left: auto;
-  background: var(--brand-red);
-}
-
-.bar.fee {
-  background: var(--brand-red);
-}
-
-.bar.lost {
-  background: var(--coral);
-}
-
-.bar.positive {
-  background: var(--green);
-}
-
-.cashflow-value {
-  color: var(--muted);
-  text-align: right;
-  line-height: 1.35;
-}
-
-.cashflow-value small {
-  display: block;
-  color: #7d8783;
-  font-weight: 700;
+.cashflow-total-row td {
+  position: sticky;
+  bottom: 0;
+  background: #eef3fb;
+  border-top: 2px solid var(--brand-blue);
+  font-weight: 900;
 }
 
 .data-section {
@@ -648,10 +614,6 @@ tbody tr:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .bar-row {
-    grid-template-columns: 72px minmax(0, 1fr) 190px;
-  }
-
   .benchmark-row {
     grid-template-columns: 110px minmax(0, 1fr) 70px;
   }
@@ -675,12 +637,6 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 
-  .bar-row {
-    grid-template-columns: 1fr;
-    font-size: 0.78rem;
-    gap: 6px;
-  }
-
   .benchmark-row {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -690,7 +646,4 @@ tbody tr:hover {
     text-align: left;
   }
 
-  .cashflow-value {
-    text-align: left;
-  }
 }
