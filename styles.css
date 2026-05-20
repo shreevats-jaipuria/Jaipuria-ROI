@@ -19,6 +19,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -144,6 +150,7 @@ h1 {
 
 .panel {
   padding: 22px;
+  min-width: 0;
 }
 
 .inputs {
@@ -345,6 +352,7 @@ output {
   border-radius: 8px;
   padding: 18px;
   background: linear-gradient(180deg, #ffffff, #fbfcff);
+  min-width: 0;
 }
 
 .benchmark-card {
@@ -500,8 +508,13 @@ output {
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
+  width: 100%;
+  max-width: 100%;
   max-height: 520px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-width: 0;
 }
 
 .cashflow-table {
@@ -629,6 +642,23 @@ tbody tr:hover {
   .panel,
   .data-section {
     padding: 18px;
+  }
+
+  .cashflow-card,
+  .benchmark-card {
+    margin-left: -4px;
+    margin-right: -4px;
+    padding: 14px;
+  }
+
+  .cashflow-table-wrap {
+    display: block;
+    width: 100%;
+    max-width: calc(100vw - 56px);
+  }
+
+  .cashflow-table {
+    min-width: 680px;
   }
 
   .segmented,
