@@ -26,6 +26,7 @@ const postMbaGrowthOptions = [
 const benchmarkReturns = [
   { id: "mba", label: "Your MBA IRR", value: null },
   { id: "market", label: "Nifty return (30 yr)", value: 12.74 },
+  { id: "summit", label: "Summit Securities", value: 16.1 },
   { id: "gold", label: "Gold", value: 9 },
   { id: "fd", label: "FD", value: 7 },
 ];
@@ -274,8 +275,9 @@ function renderBenchmarks(irr) {
   const fd = benchmarkReturns.find((benchmark) => benchmark.id === "fd").value;
   const gold = benchmarkReturns.find((benchmark) => benchmark.id === "gold").value;
   const market = benchmarkReturns.find((benchmark) => benchmark.id === "market").value;
+  const summit = benchmarkReturns.find((benchmark) => benchmark.id === "summit").value;
   const note = Number.isFinite(irr)
-    ? `This MBA case is ${(irr - market).toFixed(1)} percentage points versus Nifty, ${(irr - gold).toFixed(1)} versus gold, and ${(irr - fd).toFixed(1)} versus FD.`
+    ? `This MBA case is ${(irr - market).toFixed(1)} pp vs Nifty, ${(irr - summit).toFixed(1)} pp vs Summit Securities (incl. subsidiaries), ${(irr - gold).toFixed(1)} pp vs gold, and ${(irr - fd).toFixed(1)} pp vs FD.`
     : "This MBA case does not generate a viable IRR within the selected projection horizon.";
   document.querySelector("#benchmarkNote").textContent = note;
 }

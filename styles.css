@@ -430,6 +430,10 @@ output {
   background: var(--green);
 }
 
+.benchmark-fill.summit {
+  background: linear-gradient(90deg, #5a2d82, #9b59b6);
+}
+
 .benchmark-value {
   color: var(--brand-blue-dark);
   text-align: right;
